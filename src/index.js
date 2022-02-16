@@ -19,19 +19,22 @@ refs.searchBtn.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 function onInput (e) {
     refs.countryInfo.innerHTML = "";
     refs.countryList.innerHTML = "";
-    const country = e.target.value.trim();    
-    fetchCountries(country)
-    .then(countries => renderCountry(countries))
-    .catch(err => {        
-        Notify.failure("Oops, there is no country with that name");
-      });
+    const country = e.target.value.trim();
+    if (country) {
+        fetchCountries(country)
+        .then(countries => renderCountry(countries))
+        .catch(err => {        
+        Notify.failure(err);
+        });
+    }
+    
 }
 
 function renderCountry(countries) {
     if (countries.length > 10) {
         Notify.info("Too many matches found. Please enter a more specific name.");
     }
-    if (countries.length === 1) {
+    if (countries.length === 1) {        
         refs.countryInfo.innerHTML = countryTmpl(countries[0]);
         Object.values(countries[0].languages).forEach(element => {            
             refs.countryInfo.insertAdjacentHTML('beforeend', `${element} `);
@@ -42,7 +45,7 @@ function renderCountry(countries) {
     
     if (countries.length < 10 && countries.length !== 1) {
         refs.countryList.innerHTML = countries.map(country => {
-            return `<h1>${country.flag} ${country.name.official}</h1>`
+            return `<p><img src="${country.flags.svg}" alt="flag" width="20px"> ${country.name.official}</p>`
         }).join('');         
     }
 }
