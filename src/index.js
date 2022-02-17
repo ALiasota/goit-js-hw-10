@@ -35,15 +35,10 @@ function renderCountry(countries) {
         Notify.info("Too many matches found. Please enter a more specific name.");
     }
     if (countries.length === 1) {        
-        refs.countryInfo.innerHTML = countryTmpl(countries[0]);
-        Object.values(countries[0].languages).forEach(element => {            
-            refs.countryInfo.insertAdjacentHTML('beforeend', `${element} `);
-        });
-        
-        console.log(Object.values(countries[0].languages) );
+        refs.countryInfo.innerHTML = countryTmpl(countries[0]);        
     }
     
-    if (countries.length < 10 && countries.length !== 1) {
+    if (countries.length <= 10 && countries.length >= 2 ) {
         refs.countryList.innerHTML = countries.map(country => {
             return `<p><img src="${country.flags.svg}" alt="flag" width="20px"> ${country.name.official}</p>`
         }).join('');         
